@@ -167,7 +167,9 @@ export default class Terraform {
                   attributes: {
                     "is-destroy": false,
                     "message": `Queued by TFC GH Action (${identifier})`,
-                    "variables": variables
+                    "variables": [
+                        {key: "be_app_image_tag", value: "latest"}
+                    ]
                   },
                   type: "runs",
                   relationships: {
