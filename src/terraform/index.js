@@ -160,6 +160,7 @@ export default class Terraform {
      * @returns {string} - Run Id.
      */
     async _run(workspaceId, identifier, variables) {
+        console.log(`Variables: ${variables}`)
         try {
             const run = {
                 data: {
