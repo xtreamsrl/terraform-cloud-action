@@ -153,18 +153,20 @@ export default class Terraform {
 
     /**
      * Requests run of new configuration.
-     * 
+     *
      * @param {string} workspaceId - Workspace Id.
      * @param {string} identifier - Unique identifier for the run (e.g. git commit).
+     * @param variables
      * @returns {string} - Run Id.
      */
-    async _run(workspaceId, identifier) {        
+    async _run(workspaceId, identifier, variables) {
         try {
             const run = {
                 data: {
                   attributes: {
                     "is-destroy": false,
                     "message": `Queued by TFC GH Action (${identifier})`,
+                    "variables": variables
                   },
                   type: "runs",
                   relationships: {
@@ -236,18 +238,19 @@ export default class Terraform {
 
     /**
      * Create, initialize and start a new workspace run.
-     * 
+     *
      * @param {string} workspace - Workspace name.
      * @param {string} filePath - Path to tar.gz file with Terraform configuration.
      * @param {string} identifier - Unique identifier for the run (e.g. git commit).
+     * @param variables
      * @returns {string} - The Id of the new run.
      */
-    async run(workspace, filePath, identifier) {
+    async run(workspace, filePath, identifier, variables) {
 
         const workspaceId = await this._checkWorkspace(workspace)
         const {id, uploadUrl} = await this._createConfigVersion(workspaceId)
         await this._uploadConfiguration(id, uploadUrl, filePath)
-        let { runId, status } = await this._run(workspaceId, identifier)
+        let { runId, status } = await this._run(workspaceId, identifier, variables)
         if (this.awaitApply) { status = await this._poll(runId) }
 
         return { runId, status }

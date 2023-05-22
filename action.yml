@@ -29,6 +29,10 @@ inputs:
     description: 'Number of times to retry Terraform Cloud API requests.'
     required: false
     default: 5
+  tfVars:
+    description: 'Terraform variables'
+    required: false
+
   
 outputs:
   runId: # id of output
@@ -37,7 +41,7 @@ outputs:
     description: 'Status of the run.'
 
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 
 branding:
